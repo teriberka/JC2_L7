@@ -5,6 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+
+// 2. *Реализовать личные сообщения так: если клиент пишет «/w nick3 Привет»,
+// то только клиенту с ником nick3 должно прийти сообщение «Привет».
+
+
 public class ClientHandler {
     private Server server;
     private Socket socket;
@@ -60,7 +65,21 @@ public class ClientHandler {
                             break;
                         }
 
-                        server.broadcastMsg(nick + ": " + str);
+                        // проверям полученное сообщение на наличие специального ключа
+                        // и отправляем сообщение определнномку клиенту
+                        if (str.startsWith("/w ")) {
+                            String[] token = str.split(" ", 3);
+
+                            System.out.println(str);
+                            if (token.length < 3) {
+                                continue;
+                            }
+                            System.out.println("send msg to nick: " + token[1]);
+
+                            server.directMsg(nick + ": " + token[2], token[1]);
+                        } else {
+                            server.broadcastMsg(nick + ": " + str);
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -87,5 +106,9 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getNick() {
+        return this.nick;
     }
 }

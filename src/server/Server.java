@@ -47,6 +47,19 @@ public class Server {
         }
     }
 
+
+    // адресная отправка, находим нужного клиента и отправляем ему сообщение
+    public void directMsg(String msg, String nick){
+        for (ClientHandler c:clients) {
+            System.out.println("directMSG | foreach | nick: " + c.getNick());
+            if (nick.equals(c.getNick())) {
+                System.out.println("directMSG | sendMsg | nick: " + c.getNick() + " | msg: " + msg);
+                c.sendMsg(msg);
+            }
+        }
+    }
+
+
     public void subscribe(ClientHandler clientHandler){
         clients.add(clientHandler);
     }
